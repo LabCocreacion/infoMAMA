@@ -1,6 +1,9 @@
 from flask import Blueprint, jsonify, request
 from src.models.InstitutoModel import InstitutoModel
+from src.utils.DateFormat import DateFormat
+from datetime import datetime
 import uuid
+
 
 instituto_bp = Blueprint('instituto_bp', __name__)
 
@@ -13,7 +16,7 @@ def get_instituciones():
     except Exception as e:
         return str(e), 500
 
-@instituto_bp.route('/instituciones', methods=['POST'])
+@instituto_bp.route('/addInstitucion', methods=['POST'])
 def add_institucion():
     try:
         data = request.get_json()
@@ -28,7 +31,10 @@ def add_institucion():
             telefono_gerencia=data['telefono_gerencia'],
             telefono_enlace_tecnico=data['telefono_enlace_tecnico'],
             zona=data['zona'],
-            fecha_creacion=data['fecha_creacion']
+            fecha_creacion= DateFormat.convert_date(datetime.now()),
+            creation_user=data['creation_user'],
+            latitud=data['latitud'],
+            longitud=data['longitud']
         )
         result = InstitutoModel.add(new_institucion)
         return jsonify(result), 201
