@@ -2,6 +2,7 @@
 from flask import Flask, Response
 from flask_cors import CORS
 from src.routes.instituto_routes import instituto_bp
+from src.routes.forms_routes import forms_bp
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/api/*": {"origins": "http://localhost:4200"}}, supports_credentials=True)
@@ -12,4 +13,6 @@ def options():
 
 if __name__ == '__main__':
     app.register_blueprint(instituto_bp, url_prefix='/api/tamizacion-mama')
+    app.register_blueprint(forms_bp, url_prefix='/api/tamizacion-mama/forms')
+
     app.run(debug=True, port=5001)
