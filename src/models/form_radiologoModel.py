@@ -20,7 +20,8 @@ class FormRadiologoModel:
         try:
             conn = get_connection()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM formulario_radiologo WHERE id_paciente = %s", (id,))
+            query = "SELECT * FROM formulario_radiologo WHERE id_paciente = %s"
+            cursor.execute(query, (id,))
             forms_data = cursor.fetchall()
             cursor.close()
             conn.close()
@@ -29,6 +30,7 @@ class FormRadiologoModel:
             forms = [FormRadiologo(*data) for data in forms_data]
             return forms
         except Exception as e:
+            print('ERROR: al consultar la tabla formulario_radiologo',e)
             return str(e), 500
     
     @staticmethod
@@ -46,5 +48,6 @@ class FormRadiologoModel:
             conn.close()
             return formulario.__dict__
         except Exception as e:
+            print('ERROR: al consultar la tabla formulario_radiologo',e)
             return str(e), 500
          

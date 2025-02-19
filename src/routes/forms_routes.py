@@ -1,22 +1,33 @@
 from flask import Blueprint, jsonify, request
-from src.models.form_radiologoModel import FormRadiologoModel
+from src.models.Form_radiologoModel import FormRadiologoModel
+from src.models.Form_cirujanoModel import FormCirujanoModel
+from src.models.Form_patologoModel import FormPatologoModel
 from src.utils.DateFormat import DateFormat
 from datetime import datetime
 import uuid
 
 forms_bp = Blueprint('forms_bp', __name__)
 
-@forms_bp.route('/forms-patient/<int:id>', methods=['GET'])
+@forms_bp.route('/forms-patient/<string:id>', methods=['GET'])
 def get_forms_by_patient_id(id):
     try:
-        # TODO: Implement the logic to get all forms of a patient by its id
-        forms = FormRadiologoModel.get_by_patient_id(id)
-        forms_dict = [form.__dict__ for form in forms]
+        forms_dict = {}
+        formsRadiologo = FormRadiologoModel.get_by_patient_id(id)
+        formsCirujano = FormCirujanoModel.get_by_patient_id(id)
+        formsPatologo = FormPatologoModel.get_by_patient_id(id)
+        
+        # Convertir los objetos a diccionarios
+        forms_dict = {
+            "radiologoForms": [{"formularioRadiologo{}".format(i+1): form.__dict__} for i, form in enumerate(formsRadiologo)],
+            "patologoForms": [{"formularioPatologo{}".format(i+1): form.__dict__} for i, form in enumerate(formsPatologo)],
+            "cirujanoForms": [{"formularioCirujano{}".format(i+1): form.__dict__} for i, form in enumerate(formsCirujano)]
+        }
         return jsonify(forms_dict)
     except Exception as e:
+        print('ERROR: al consultar los formularios',e)
         return str(e), 500
 
-@forms_bp.route('/addForm', methods=['POST'])
+@forms_bp.route('/addFormRadiologo', methods=['POST'])
 def add_form():
     try:
         data = request.get_json()
