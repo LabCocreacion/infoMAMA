@@ -32,25 +32,30 @@ def add_form():
     try:
         data = request.get_json()
         new_form = FormRadiologoModel(
-            id=str(uuid.uuid4()),
-            id_paciente=data['id_paciente'],
+            id_formulario_radiologo=str(uuid.uuid4()),
+            id_paciente=data['numIdentificacionPaciente'],
             id_especialista=data['id_especialista'],
             fecha_toma_examen= DateFormat.convert_date(datetime.now()),
-            institucion_prestadora=data['institucion_prestadora'],
-            tipo_examen=data['tipo_examen'],
-            resultado_mamog_tamizacion=data['resultado_mamog_tamizacion'],
-            resultado_mamog_diagnostica=data['resultado_mamog_diagnostica'],
-            resultado_mamog_mamaria=data['resultado_mamog_mamaria'],
-            conducta_sugerida=data['conducta_sugerida']
+            institucion_prestadora=data['institucionPrestadora'],
+            tipo_examen=data['tipoExamen'],
+            resultado_mamog_tamizacion=data['resultadoTamizacion'],
+            resultado_mamog_diagnostica=data['resultadoDiagnostica'],
+            resultado_mamog_mamaria=data['resultadoEcografia'],
+            conducta_sugerida=data['conductaSugerida'],
+            ciudad=data['ciudad'],
+            departamento=data['departamento'],
+            zona=data['zona']
         )
         result = FormRadiologoModel.add(new_form)
         return jsonify(result), 201
     except Exception as e:
+        print('ERROR: al agregar el formulario',e)
         return str(e), 500
 
-@forms_bp.route('/forms/radiologo/<int:id>', methods=['GET'])
+@forms_bp.route('/radiologo-form/<string:id>', methods=['GET'])
 def get_formRadiologo(id):
     try:
+        print('id', id)
         form = FormRadiologoModel.get_by_id(id)
         if form:
             return jsonify(form.__dict__)

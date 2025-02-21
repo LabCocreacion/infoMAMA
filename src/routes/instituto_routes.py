@@ -41,10 +41,11 @@ def add_institucion():
     except Exception as e:
         return str(e), 500
 
-@instituto_bp.route('/instituciones/<int:id>', methods=['GET'])
-def get_institucion(id):
+@instituto_bp.route('/detalle-institucion/<string:name>', methods=['GET'])
+# TO-DO: Cambiar en la base de datos en vez del nombre el id de la institutcion
+def get_institucionbyName(name):
     try:
-        institucion = InstitutoModel.get_by_id(id)
+        institucion = InstitutoModel.get_by_name(name)
         if institucion:
             return jsonify(institucion.__dict__)
         else:

@@ -66,3 +66,18 @@ class InstitutoModel:
             return None
         except Exception as e:
             return str(e), 500
+    
+    @staticmethod
+    def get_by_name(name):
+        try:
+            conn = get_connection()
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM institucion WHERE nombre = %s", (name,))
+            data = cursor.fetchone()
+            cursor.close()
+            conn.close()
+            if data:
+                return Instituto(*data)
+            return None
+        except Exception as e:
+            return str(e), 500
